@@ -90,6 +90,145 @@ void main() {
     expect(material.color, background);
     expect(annotatedRegion.value.statusBarColor, statusBar);
     expect(annotatedRegion.value.statusBarIconBrightness, Brightness.dark);
+    expect(annotatedRegion.value.statusBarBrightness, Brightness.light);
+  });
+
+  testWidgets('paints optional background gradient', (tester) async {
+    const gradient = LinearGradient(
+      colors: [Color(0xFF1565C0), Color(0xFF00ACC1)],
+    );
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          appBar: CurvedAppBar(
+            title: Text('Gradient'),
+            backgroundGradient: gradient,
+          ),
+        ),
+      ),
+    );
+
+    final decoratedBoxes = tester.widgetList<DecoratedBox>(
+      find.descendant(
+        of: find.byType(CurvedAppBar),
+        matching: find.byType(DecoratedBox),
+      ),
+    );
+    final gradientDecoration = decoratedBoxes
+        .map((widget) => widget.decoration)
+        .whereType<BoxDecoration>()
+        .firstWhere((decoration) => decoration.gradient == gradient);
+
+    expect(gradientDecoration.gradient, gradient);
+  });
+
+  testWidgets('uses dark status bar content on light app bar backgrounds', (
+    tester,
+  ) async {
+    const background = Color(0xFFF7FAFF);
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          appBar: CurvedAppBar(
+            title: Text('Light'),
+            backgroundColor: background,
+          ),
+        ),
+      ),
+    );
+
+    final annotatedRegion = tester
+        .widget<AnnotatedRegion<SystemUiOverlayStyle>>(
+          find.byType(AnnotatedRegion<SystemUiOverlayStyle>),
+        );
+
+    expect(annotatedRegion.value.statusBarColor, background);
+    expect(annotatedRegion.value.statusBarIconBrightness, Brightness.dark);
+    expect(annotatedRegion.value.statusBarBrightness, Brightness.light);
+  });
+
+  testWidgets('uses light status bar content on dark app bar backgrounds', (
+    tester,
+  ) async {
+    const background = Color(0xFF081A2F);
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          appBar: CurvedAppBar(
+            title: Text('Dark'),
+            backgroundColor: background,
+          ),
+        ),
+      ),
+    );
+
+    final annotatedRegion = tester
+        .widget<AnnotatedRegion<SystemUiOverlayStyle>>(
+          find.byType(AnnotatedRegion<SystemUiOverlayStyle>),
+        );
+
+    expect(annotatedRegion.value.statusBarColor, background);
+    expect(annotatedRegion.value.statusBarIconBrightness, Brightness.light);
+    expect(annotatedRegion.value.statusBarBrightness, Brightness.dark);
+  });
+
+  testWidgets('uses gradient brightness for status bar content', (
+    tester,
+  ) async {
+    const gradient = LinearGradient(
+      colors: [Color(0xFF07111F), Color(0xFF16395F)],
+    );
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          appBar: CurvedAppBar(
+            title: Text('Dark gradient'),
+            backgroundGradient: gradient,
+          ),
+        ),
+      ),
+    );
+
+    final annotatedRegion = tester
+        .widget<AnnotatedRegion<SystemUiOverlayStyle>>(
+          find.byType(AnnotatedRegion<SystemUiOverlayStyle>),
+        );
+
+    expect(annotatedRegion.value.statusBarColor, Colors.transparent);
+    expect(annotatedRegion.value.statusBarIconBrightness, Brightness.light);
+    expect(annotatedRegion.value.statusBarBrightness, Brightness.dark);
+  });
+
+  testWidgets('uses dark status bar content on light gradients', (
+    tester,
+  ) async {
+    const gradient = LinearGradient(
+      colors: [Color(0xFFFFFFFF), Color(0xFFE3F2FD)],
+    );
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          appBar: CurvedAppBar(
+            title: Text('Light gradient'),
+            backgroundGradient: gradient,
+          ),
+        ),
+      ),
+    );
+
+    final annotatedRegion = tester
+        .widget<AnnotatedRegion<SystemUiOverlayStyle>>(
+          find.byType(AnnotatedRegion<SystemUiOverlayStyle>),
+        );
+
+    expect(annotatedRegion.value.statusBarColor, Colors.transparent);
+    expect(annotatedRegion.value.statusBarIconBrightness, Brightness.dark);
+    expect(annotatedRegion.value.statusBarBrightness, Brightness.light);
   });
 
   testWidgets('collapses and hides content when visible is false', (

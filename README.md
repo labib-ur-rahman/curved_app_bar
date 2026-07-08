@@ -1,23 +1,51 @@
 # Curved App Bar
 
-A lightweight Flutter package for building customizable curved app bars with a
-`CustomClipper<Path>`.
+[![pub package](https://img.shields.io/pub/v/curved_app_bar.svg)](https://pub.dev/packages/curved_app_bar)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS%20%7C%20Web%20%7C%20Desktop-brightgreen.svg)](#supported-platforms)
+[![Flutter](https://img.shields.io/badge/Flutter-package-02569B.svg)](https://flutter.dev)
+
+A lightweight Flutter package for building customizable curved app bars that
+work directly with `Scaffold.appBar`.
+
+`curved_app_bar` is designed for clean Flutter UI work: rounded or inverted
+curved app bars, theme-aware colors, gradient backgrounds, automatic status bar
+contrast, and familiar AppBar slots like leading, title, actions, and bottom
+content.
 
 ## Features
 
 - Works directly with `Scaffold.appBar`
-- Uses Flutter's built-in theme colors by default
-- Supports rounded and inverted/opposite rounded bottom shapes
-- Resolves status bar color and icon brightness automatically
+- Supports solid colors and `Gradient` backgrounds
+- Automatically resolves status bar icon/text contrast for light and dark
+  backgrounds
+- Supports rounded and inverted rounded bottom shapes
 - Supports leading, title, subtitle, actions, and bottom widgets
 - Includes a simple `visible` flag for dynamic show/hide behavior
 - No state management dependency
+- Clean package structure with documented public API
+
+## Supported Platforms
+
+This is a Flutter UI package and supports all standard Flutter app platforms:
+
+| Android | iOS | Web | macOS | Windows | Linux |
+| --- | --- | --- | --- | --- | --- |
+| Supported | Supported | Supported | Supported | Supported | Supported |
 
 ## Installation
 
+Add the package to your `pubspec.yaml`:
+
 ```yaml
 dependencies:
-  curved_app_bar: ^1.0.0
+  curved_app_bar: ^1.0.1
+```
+
+Then import it:
+
+```dart
+import 'package:curved_app_bar/curved_app_bar.dart';
 ```
 
 ## Simple Usage
@@ -39,6 +67,43 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+```
+
+## Gradient Background
+
+Use `backgroundGradient` when you want the curved app bar to render a gradient.
+The status bar icon/text color is resolved automatically from the gradient
+brightness.
+
+```dart
+CurvedAppBar(
+  title: const Text('Dashboard'),
+  backgroundGradient: const LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      Color(0xFF1565C0),
+      Color(0xFF00ACC1),
+    ],
+  ),
+);
+```
+
+## Status Bar Contrast
+
+The package resolves status bar styling for Android and iOS:
+
+- Light app bar background -> dark status bar icons/text
+- Dark app bar background -> light status bar icons/text
+- Gradient background -> samples the gradient brightness automatically
+- `statusBarColor` and `systemOverlayStyle` remain available when you need full
+  manual control
+
+```dart
+CurvedAppBar(
+  title: const Text('Profile'),
+  backgroundColor: const Color(0xFFF7FAFF),
+);
 ```
 
 ## Inverted Rounded Shape
@@ -66,7 +131,6 @@ Scaffold(
 CurvedAppBar(
   backgroundColor: const Color(0xFF23479A),
   foregroundColor: Colors.white,
-  statusBarColor: const Color(0xFF23479A),
   leading: IconButton(
     icon: const Icon(Icons.menu),
     onPressed: () {},
@@ -79,6 +143,25 @@ CurvedAppBar(
       onPressed: () {},
     ),
   ],
+);
+```
+
+## Bottom Widget
+
+Use a `PreferredSize` when adding tabs, filters, or custom bottom content.
+
+```dart
+CurvedAppBar(
+  title: const Text('Explore'),
+  bottom: const PreferredSize(
+    preferredSize: Size.fromHeight(44),
+    child: TabBar(
+      tabs: [
+        Tab(text: 'Latest'),
+        Tab(text: 'Popular'),
+      ],
+    ),
+  ),
 );
 ```
 
@@ -96,21 +179,36 @@ CurvedAppBar(
 );
 ```
 
-## Bottom Widget
+## Public API
 
-Use a `PreferredSize` when adding tabs, filters, or any custom bottom content.
+- `CurvedAppBar`
+- `CurvedAppBarClipper`
+- `CurvedAppBarShape.rounded`
+- `CurvedAppBarShape.invertedRounded`
 
-```dart
-CurvedAppBar(
-  title: const Text('Explore'),
-  bottom: const PreferredSize(
-    preferredSize: Size.fromHeight(44),
-    child: TabBar(
-      tabs: [
-        Tab(text: 'Latest'),
-        Tab(text: 'Popular'),
-      ],
-    ),
-  ),
-);
+## Developer
+
+Developed and maintained by **Md Labibur Rahman**, Flutter Developer from
+Bangladesh.
+
+- GitHub: [labib-ur-rahman](https://github.com/labib-ur-rahman)
+- Package repository:
+  [curved_app_bar](https://github.com/labib-ur-rahman/curved_app_bar)
+
+## Contributing
+
+This package is part of my open-source learning journey. Contributions,
+suggestions, bug reports, and documentation improvements are welcome.
+
+Before opening a pull request, please run:
+
+```bash
+dart format lib test
+flutter analyze
+flutter test
+dart pub publish --dry-run
 ```
+
+## License
+
+This package is released under the [MIT License](LICENSE).
