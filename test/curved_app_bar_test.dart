@@ -243,6 +243,37 @@ void main() {
     expect(find.text('Hidden title'), findsNothing);
   });
 
+  testWidgets('can render without built-in animation', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          appBar: CurvedAppBar(animate: false, title: Text('No animation')),
+        ),
+      ),
+    );
+
+    expect(find.text('No animation'), findsOneWidget);
+    expect(find.byType(TweenAnimationBuilder<double>), findsNothing);
+  });
+
+  test('uses shape-aware default heights', () {
+    const roundedAppBar = CurvedAppBar();
+    const invertedAppBar = CurvedAppBar(
+      shape: CurvedAppBarShape.invertedRounded,
+    );
+    const customHeightAppBar = CurvedAppBar(
+      shape: CurvedAppBarShape.invertedRounded,
+      height: 84,
+    );
+
+    expect(roundedAppBar.preferredSize.height, kToolbarHeight);
+    expect(
+      invertedAppBar.preferredSize.height,
+      CurvedAppBar.defaultExpandedHeight,
+    );
+    expect(customHeightAppBar.preferredSize.height, 84);
+  });
+
   test('rounded and inverted clippers produce non-empty paths', () {
     const size = Size(360, 120);
 
@@ -285,5 +316,208 @@ void main() {
     expect(find.byIcon(Icons.search), findsOneWidget);
     expect(find.byIcon(Icons.more_vert), findsOneWidget);
     expect(find.text('Bottom content'), findsOneWidget);
+  });
+
+  testWidgets('keeps title visible when actions are crowded', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(320, 640));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          appBar: CurvedAppBar(
+            leading: Icon(Icons.menu),
+            title: Text('Crowded Title'),
+            subtitle: Text('Still visible'),
+            actions: [
+              Icon(Icons.settings),
+              Icon(Icons.settings),
+              Icon(Icons.settings),
+              Icon(Icons.settings),
+              Icon(Icons.settings),
+              Icon(Icons.settings),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Crowded Title'), findsOneWidget);
+    expect(find.text('Still visible'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('moves extra typed actions into overflow menu', (tester) async {
+    var selected = '';
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          appBar: CurvedAppBar(
+            title: const Text('Actions'),
+            maxVisibleActionItems: 1,
+            actionItems: [
+              CurvedAppBarAction(
+                label: 'Search',
+                icon: Icons.search,
+                onPressed: () => selected = 'Search',
+              ),
+              CurvedAppBarAction(
+                label: 'Settings',
+                icon: Icons.settings,
+                onPressed: () => selected = 'Settings',
+              ),
+              CurvedAppBarAction(
+                label: 'Share',
+                icon: Icons.share,
+                onPressed: () => selected = 'Share',
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byIcon(Icons.search), findsOneWidget);
+    expect(find.byIcon(Icons.more_vert_rounded), findsOneWidget);
+    expect(find.text('Settings'), findsNothing);
+
+    await tester.tap(find.byIcon(Icons.more_vert_rounded));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Settings'), findsOneWidget);
+    expect(find.text('Share'), findsOneWidget);
+
+    await tester.tap(find.text('Settings'));
+    await tester.pumpAndSettle();
+
+    expect(selected, 'Settings');
+  });
+
+  testWidgets('overflow menu item colors stay visible on menu surface', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        ),
+        home: Scaffold(
+          appBar: CurvedAppBar(
+            title: const Text('Actions'),
+            foregroundColor: Colors.white,
+            overflowMenuColor: Colors.white,
+            maxVisibleActionItems: 0,
+            actionItems: [
+              CurvedAppBarAction(
+                label: 'Settings',
+                icon: Icons.settings,
+                onPressed: () {},
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byIcon(Icons.more_vert_rounded));
+    await tester.pumpAndSettle();
+
+    final settingsIcon = tester.widget<Icon>(
+      find.descendant(
+        of: find.byType(PopupMenuItem<CurvedAppBarAction>),
+        matching: find.byIcon(Icons.settings),
+      ),
+    );
+    final settingsText = tester.widget<Text>(find.text('Settings'));
+
+    expect(settingsIcon.color, isNot(Colors.white));
+    expect(settingsText.style?.color, isNot(Colors.white));
+  });
+
+  testWidgets('shows custom back button when route can pop', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          appBar: CurvedAppBar(
+            title: const Text('Root'),
+            actions: [
+              Builder(
+                builder: (context) {
+                  return TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const Scaffold(
+                            appBar: CurvedAppBar(
+                              title: Text('Details'),
+                              backButton: Icon(Icons.arrow_back_ios_new),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Text('Open'),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Details'), findsOneWidget);
+    expect(find.byIcon(Icons.arrow_back_ios_new), findsOneWidget);
+  });
+
+  testWidgets('does not show implied back button on root route', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(appBar: CurvedAppBar(title: Text('Root'))),
+      ),
+    );
+
+    expect(find.byType(BackButton), findsNothing);
+  });
+
+  testWidgets('shows drawer button when root scaffold has drawer', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          drawer: Drawer(child: Text('Menu content')),
+          appBar: CurvedAppBar(
+            title: Text('Root'),
+            drawerButton: Icon(Icons.dashboard_customize),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byIcon(Icons.dashboard_customize), findsOneWidget);
+    expect(find.text('Menu content'), findsNothing);
+  });
+
+  testWidgets('default drawer button opens scaffold drawer', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          drawer: Drawer(child: Text('Menu content')),
+          appBar: CurvedAppBar(title: Text('Root')),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byIcon(Icons.menu));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Menu content'), findsOneWidget);
   });
 }

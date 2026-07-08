@@ -9,10 +9,18 @@ class CurvedAppBarLeading extends StatelessWidget {
     required this.leadingWidth,
     required this.automaticallyImplyLeading,
     this.leading,
+    this.backButton,
+    this.drawerButton,
   });
 
   /// A widget displayed before the title.
   final Widget? leading;
+
+  /// Custom back button shown when the current route can pop.
+  final Widget? backButton;
+
+  /// Custom menu button shown when the nearest [Scaffold] has a drawer.
+  final Widget? drawerButton;
 
   /// Whether to show a default back button when [leading] is null.
   final bool automaticallyImplyLeading;
@@ -25,7 +33,7 @@ class CurvedAppBarLeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final leadingWidget = leading ?? _buildDefaultLeading(context);
+    final leadingWidget = leading ?? _buildImpliedLeading(context);
 
     if (leadingWidget == null) {
       return const SizedBox.shrink();
@@ -43,16 +51,26 @@ class CurvedAppBarLeading extends StatelessWidget {
     );
   }
 
-  Widget? _buildDefaultLeading(BuildContext context) {
+  Widget? _buildImpliedLeading(BuildContext context) {
     if (!automaticallyImplyLeading) {
       return null;
     }
 
     final route = ModalRoute.of(context);
-    if (route == null || !route.canPop) {
-      return null;
+    if (route != null && route.canPop) {
+      return backButton ?? const BackButton();
     }
 
-    return const BackButton();
+    final scaffold = Scaffold.maybeOf(context);
+    if (scaffold != null && scaffold.hasDrawer) {
+      return drawerButton ??
+          IconButton(
+            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            icon: const Icon(Icons.menu),
+            onPressed: scaffold.openDrawer,
+          );
+    }
+
+    return null;
   }
 }

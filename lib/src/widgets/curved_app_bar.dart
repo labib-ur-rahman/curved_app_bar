@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../clippers/curved_app_bar_clipper.dart';
 import '../enums/curved_app_bar_shape.dart';
+import '../models/curved_app_bar_action.dart';
 import '../utils/system_overlay_style_resolver.dart';
 import 'curved_app_bar_actions.dart';
 import 'curved_app_bar_leading.dart';
@@ -18,14 +19,24 @@ class CurvedAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CurvedAppBar({
     super.key,
     this.leading,
+    this.backButton,
+    this.drawerButton,
     this.automaticallyImplyLeading = true,
     this.title,
     this.subtitle,
     this.actions,
+    this.actionItems,
+    this.maxVisibleActionItems = 2,
+    this.overflowMenuIcon,
+    this.overflowMenuTooltip,
+    this.overflowMenuColor,
+    this.overflowMenuIconColor,
+    this.overflowMenuTextStyle,
     this.bottom,
     this.centerTitle = false,
-    this.height = defaultHeight,
+    this.height,
     this.leadingWidth = kToolbarHeight,
+    this.actionsMaxWidthFactor = 0.45,
     this.curveRadius = defaultCurveRadius,
     this.shape = CurvedAppBarShape.rounded,
     this.backgroundColor,
@@ -37,6 +48,7 @@ class CurvedAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.titleTextStyle,
     this.subtitleTextStyle,
     this.visible = true,
+    this.animate = true,
     this.animationDuration = const Duration(milliseconds: 220),
     this.animationCurve = Curves.easeOutCubic,
     this.clipBehavior = Clip.antiAlias,
@@ -44,6 +56,9 @@ class CurvedAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   /// The default app bar height, excluding the status bar.
   static const double defaultHeight = kToolbarHeight;
+
+  /// The default app bar height for non-rounded shapes.
+  static const double defaultExpandedHeight = kToolbarHeight + 40;
 
   /// The default bottom curve radius.
   static const double defaultCurveRadius = 32;
@@ -54,7 +69,24 @@ class CurvedAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// only when the current route can pop.
   final Widget? leading;
 
-  /// Whether to show a default back button when [leading] is null.
+  /// Custom back button shown when [leading] is null, [automaticallyImplyLeading]
+  /// is true, and the current route can pop.
+  ///
+  /// Defaults to Flutter's [BackButton].
+  final Widget? backButton;
+
+  /// Custom drawer menu button shown when [leading] is null,
+  /// [automaticallyImplyLeading] is true, the current route cannot pop, and the
+  /// nearest [Scaffold] has a drawer.
+  ///
+  /// Defaults to a menu [IconButton] that opens the drawer.
+  final Widget? drawerButton;
+
+  /// Whether to show an implied leading widget when [leading] is null.
+  ///
+  /// When true, the app bar shows a back button if the current route can pop.
+  /// If the current route cannot pop but the nearest [Scaffold] has a drawer,
+  /// it shows a drawer menu button. Otherwise, no leading widget is shown.
   final bool automaticallyImplyLeading;
 
   /// The main title widget.
@@ -66,6 +98,34 @@ class CurvedAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Widgets displayed after the title area.
   final List<Widget>? actions;
 
+  /// Typed actions that can automatically move into an overflow menu.
+  ///
+  /// Use this when you want common actions visible as icon buttons and
+  /// additional actions automatically placed under the three-dot menu.
+  final List<CurvedAppBarAction>? actionItems;
+
+  /// Maximum number of [actionItems] shown directly in the toolbar.
+  ///
+  /// Remaining items are moved into the overflow menu.
+  final int maxVisibleActionItems;
+
+  /// Optional icon used for the overflow menu button.
+  final Widget? overflowMenuIcon;
+
+  /// Tooltip used for the overflow menu button.
+  final String? overflowMenuTooltip;
+
+  /// Background color used by the overflow menu surface.
+  final Color? overflowMenuColor;
+
+  /// Default icon color for overflow menu items.
+  ///
+  /// Toolbar action icons still inherit the app bar foreground color.
+  final Color? overflowMenuIconColor;
+
+  /// Default text style for overflow menu items.
+  final TextStyle? overflowMenuTextStyle;
+
   /// An optional widget displayed below the toolbar row.
   final PreferredSizeWidget? bottom;
 
@@ -73,10 +133,19 @@ class CurvedAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool centerTitle;
 
   /// The toolbar height, excluding status bar and [bottom].
-  final double height;
+  ///
+  /// When null, [CurvedAppBarShape.rounded] uses [defaultHeight] and other
+  /// shapes use [defaultExpandedHeight].
+  final double? height;
 
   /// Width reserved for the leading widget.
   final double leadingWidth;
+
+  /// Maximum toolbar width fraction reserved for trailing [actions].
+  ///
+  /// This prevents crowded action rows from hiding the title or overflowing the
+  /// toolbar. Extra actions become horizontally scrollable inside this width.
+  final double actionsMaxWidthFactor;
 
   /// Radius used by [CurvedAppBarClipper].
   final double curveRadius;
@@ -129,6 +198,12 @@ class CurvedAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// the app bar area.
   final bool visible;
 
+  /// Whether to play the built-in fade and slide entrance animation.
+  ///
+  /// Set this to false when the app bar should render immediately without any
+  /// transition.
+  final bool animate;
+
   /// Duration used by the built-in opacity and slide transition.
   final Duration animationDuration;
 
@@ -140,13 +215,34 @@ class CurvedAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   double get _bottomHeight => bottom?.preferredSize.height ?? 0;
 
+  double get _effectiveHeight {
+    final customHeight = height;
+    if (customHeight != null) {
+      return customHeight;
+    }
+
+    return switch (shape) {
+      CurvedAppBarShape.rounded => defaultHeight,
+      _ => defaultExpandedHeight,
+    };
+  }
+
+  double get _toolbarContentHeight {
+    final resolvedHeight = _effectiveHeight;
+    if (resolvedHeight < defaultHeight) {
+      return resolvedHeight;
+    }
+
+    return defaultHeight;
+  }
+
   @override
   Size get preferredSize {
     if (!visible) {
       return Size.zero;
     }
 
-    return Size.fromHeight(height + _bottomHeight);
+    return Size.fromHeight(_effectiveHeight + _bottomHeight);
   }
 
   @override
@@ -185,15 +281,48 @@ class CurvedAppBar extends StatelessWidget implements PreferredSizeWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(
-                      height: height,
-                      child: Padding(
-                        padding: contentPadding,
-                        child: NavigationToolbar(
-                          leading: _buildLeading(resolvedForegroundColor),
-                          middle: _buildTitleArea(resolvedForegroundColor),
-                          trailing: _buildActions(),
-                          centerMiddle: centerTitle,
-                          middleSpacing: 16,
+                      height: _effectiveHeight,
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: SizedBox(
+                          height: _toolbarContentHeight,
+                          child: Padding(
+                            padding: contentPadding,
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                final leading = _buildLeading(
+                                  context,
+                                  resolvedForegroundColor,
+                                );
+                                final titleArea = _buildTitleArea(
+                                  resolvedForegroundColor,
+                                );
+                                final actions = _buildActions(
+                                  constraints.maxWidth,
+                                );
+
+                                return Row(
+                                  children: [
+                                    ?leading,
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 16,
+                                        ),
+                                        child: Align(
+                                          alignment: centerTitle
+                                              ? Alignment.center
+                                              : Alignment.centerLeft,
+                                          child: titleArea,
+                                        ),
+                                      ),
+                                    ),
+                                    ?actions,
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -213,6 +342,10 @@ class CurvedAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
     );
+
+    if (!animate) {
+      return appBar;
+    }
 
     return TweenAnimationBuilder<double>(
       tween: Tween<double>(begin: 0, end: 1),
@@ -247,17 +380,32 @@ class CurvedAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Widget? _buildLeading(Color foregroundColor) {
-    if (leading == null && !automaticallyImplyLeading) {
+  Widget? _buildLeading(BuildContext context, Color foregroundColor) {
+    if (leading == null && !_shouldBuildImpliedLeading(context)) {
       return null;
     }
 
     return CurvedAppBarLeading(
       leading: leading,
+      backButton: backButton,
+      drawerButton: drawerButton,
       automaticallyImplyLeading: automaticallyImplyLeading,
       leadingWidth: leadingWidth,
       foregroundColor: foregroundColor,
     );
+  }
+
+  bool _shouldBuildImpliedLeading(BuildContext context) {
+    if (!automaticallyImplyLeading) {
+      return false;
+    }
+
+    final route = ModalRoute.of(context);
+    if (route != null && route.canPop) {
+      return true;
+    }
+
+    return Scaffold.maybeOf(context)?.hasDrawer ?? false;
   }
 
   Widget? _buildTitleArea(Color foregroundColor) {
@@ -275,12 +423,28 @@ class CurvedAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Widget? _buildActions() {
+  Widget? _buildActions(double toolbarWidth) {
     final actionWidgets = actions;
-    if (actionWidgets == null || actionWidgets.isEmpty) {
+    final typedActions = actionItems;
+    final hasWidgetActions = actionWidgets != null && actionWidgets.isNotEmpty;
+    final hasTypedActions = typedActions != null && typedActions.isNotEmpty;
+
+    if (!hasWidgetActions && !hasTypedActions) {
       return null;
     }
 
-    return CurvedAppBarActions(actions: actionWidgets);
+    final safeFactor = actionsMaxWidthFactor.clamp(0.2, 0.8);
+
+    return CurvedAppBarActions(
+      actions: actionWidgets,
+      actionItems: typedActions,
+      maxVisibleActionItems: maxVisibleActionItems,
+      overflowMenuIcon: overflowMenuIcon,
+      overflowMenuTooltip: overflowMenuTooltip,
+      overflowMenuColor: overflowMenuColor,
+      overflowMenuIconColor: overflowMenuIconColor,
+      overflowMenuTextStyle: overflowMenuTextStyle,
+      maxWidth: toolbarWidth * safeFactor,
+    );
   }
 }
