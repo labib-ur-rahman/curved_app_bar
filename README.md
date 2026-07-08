@@ -36,7 +36,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  curved_app_bar: ^1.0.2
+  curved_app_bar: ^1.0.3
 ```
 
 Import the package:
@@ -115,6 +115,22 @@ Scaffold(
     curveRadius: 42,
   ),
   body: const SizedBox.expand(),
+);
+```
+
+### AppBar Overlay On Body
+
+Use `Scaffold.extendBodyBehindAppBar` when the body should render behind the
+curved app bar area.
+
+```dart
+Scaffold(
+  extendBodyBehindAppBar: true,
+  appBar: const CurvedAppBar(
+    title: Text('Home'),
+    shape: CurvedAppBarShape.invertedRounded,
+  ),
+  body: const Center(child: Text('Hello')),
 );
 ```
 

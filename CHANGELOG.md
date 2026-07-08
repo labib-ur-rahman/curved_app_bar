@@ -1,3 +1,13 @@
+## 1.0.3
+
+- Added an AppBar overlay-on-body implementation example to the README.
+- Improved the README as a professional implementation guide with property
+  reference tables.
+- Updated the pub.dev example entrypoint so `example/lib/main.dart` shows the
+  real `MaterialApp` and home screen implementation, while secondary screens,
+  reusable widgets, and navigation helpers stay organized under `screens/`,
+  `widgets/`, and `navigation/`.
+
 ## 1.0.2
 
 - Added customizable implied `backButton` and `drawerButton` support.

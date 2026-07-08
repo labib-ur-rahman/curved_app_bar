@@ -1,6 +1,6 @@
 name: curved_app_bar
 description: A lightweight and customizable curved AppBar widget for Flutter applications.
-version: 1.0.2
+version: 1.0.3
 homepage: https://github.com/labib-ur-rahman/curved_app_bar
 repository: https://github.com/labib-ur-rahman/curved_app_bar
 issue_tracker: https://github.com/labib-ur-rahman/curved_app_bar/issues
@@ -9,10 +9,6 @@ environment:
   sdk: ^3.12.1
   flutter: ">=1.17.0"
 
-# environment:
-#   sdk: ^3.2.0
-#   flutter: ">=3.22.0"
-
 dependencies:
   flutter:
     sdk: flutter
@@ -20,7 +16,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  # flutter_lints: ^6.0.0
   flutter_lints: any
 
 platforms:
