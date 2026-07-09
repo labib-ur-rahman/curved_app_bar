@@ -36,7 +36,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  curved_app_bar: ^1.0.5
+  curved_app_bar: ^1.0.6
 ```
 
 Import the package:
@@ -73,6 +73,8 @@ class HomePage extends StatelessWidget {
 Use `backgroundColor` and `foregroundColor` when you want full control over the
 toolbar surface and icons.
 
+![Solid Color App Bar](https://raw.githubusercontent.com/labib-ur-rahman/curved_app_bar/main/assets/preview/Solid-Color-App-Bar.png)
+
 ```dart
 CurvedAppBar(
   title: const Text('Orders'),
@@ -87,6 +89,8 @@ CurvedAppBar(
 Use `backgroundGradient` for gradient surfaces. Status bar icon/text contrast is
 resolved from the gradient brightness automatically.
 
+![Gradient App Bar](https://raw.githubusercontent.com/labib-ur-rahman/curved_app_bar/main/assets/preview/Gradient-App-Bar.png)
+
 ```dart
 CurvedAppBar(
   title: const Text('Dashboard'),
@@ -94,8 +98,8 @@ CurvedAppBar(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [
-      Color(0xFF1565C0),
-      Color(0xFF00ACC1),
+      Color(0xFFfc00ff),
+      Color(0xFF00dbde),
     ],
   ),
 );

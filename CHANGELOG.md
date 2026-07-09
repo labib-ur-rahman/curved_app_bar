@@ -1,3 +1,12 @@
+## 1.0.6
+
+- Added solid color and gradient app bar preview images for the implementation
+  guide.
+- Registered `assets/preview/` in `pubspec.yaml` and added the preview images
+  to the package screenshot metadata.
+- Updated the README with live GitHub preview image links under the solid color
+  and gradient app bar examples.
+
 ## 1.0.5
 
 - Added a package screenshot preview for pub.dev listings and package detail

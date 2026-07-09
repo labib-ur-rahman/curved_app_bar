@@ -1,6 +1,6 @@
 name: curved_app_bar
 description: A lightweight and customizable curved AppBar widget for Flutter applications.
-version: 1.0.5
+version: 1.0.6
 homepage: https://github.com/labib-ur-rahman/curved_app_bar
 repository: https://github.com/labib-ur-rahman/curved_app_bar
 issue_tracker: https://github.com/labib-ur-rahman/curved_app_bar/issues
@@ -34,3 +34,11 @@ topics:
 screenshots:
   - description: 'Shows a curved gradient app bar with drawer button and action menu.'
     path: screenshots/gradient-app-bar-with-tab.webp
+  - description: 'Shows a solid color CurvedAppBar implementation.'
+    path: assets/preview/Solid-Color-App-Bar.png
+  - description: 'Shows a gradient CurvedAppBar implementation.'
+    path: assets/preview/Gradient-App-Bar.png
+
+flutter:
+  assets:
+    - assets/preview/
