@@ -1,3 +1,10 @@
+## 1.0.5
+
+- Added a package screenshot preview for pub.dev listings and package detail
+  pages.
+- Included the `screenshots/` directory in source control so pub.dev can package
+  and display the configured preview image.
+
 ## 1.0.4
 
 - Improved `CurvedBody` overlay spacing for

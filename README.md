@@ -36,7 +36,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  curved_app_bar: ^1.0.4
+  curved_app_bar: ^1.0.5
 ```
 
 Import the package:
@@ -132,6 +132,7 @@ Scaffold(
     shape: CurvedAppBarShape.invertedRounded,
   ),
   body: CurvedBody(
+    overlap: 32,
     child: ListView.separated(
       itemCount: items.length,
       separatorBuilder: (_, _) => const SizedBox(height: 8),
