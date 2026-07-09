@@ -1,6 +1,17 @@
+## 1.0.4
+
+- Improved `CurvedBody` overlay spacing for
+  `Scaffold.extendBodyBehindAppBar` layouts.
+- Updated the default `CurvedBody.overlap` to `32` and refined the top spacing
+  calculation to avoid large blank areas below inverted app bars.
+- Kept `CurvedBody` layout-based and removed inherited top `MediaQuery` padding
+  from child scroll views by default, preventing double safe-area spacing.
+- Updated the README with direct `CurvedBody` and `withCurvedBody` examples for
+  cleaner pub.dev implementation guidance.
+- Updated the `CurvedBody` property reference to match the current public API.
+
 ## 1.0.3
 
-- Added an AppBar overlay-on-body implementation example to the README.
 - Improved the README as a professional implementation guide with property
   reference tables.
 - Updated the pub.dev example entrypoint so `example/lib/main.dart` shows the

@@ -307,7 +307,7 @@ class CurvedAppBar extends StatelessWidget implements PreferredSizeWidget {
                                     Expanded(
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
-                                          horizontal: 16,
+                                          horizontal: 8,
                                         ),
                                         child: Align(
                                           alignment: centerTitle

@@ -505,6 +505,129 @@ void main() {
     expect(find.text('Menu content'), findsNothing);
   });
 
+  testWidgets('curved body uses real layout spacing', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: MediaQuery(
+          data: MediaQueryData(padding: EdgeInsets.only(top: 48)),
+          child: CurvedBody(overlap: 16, child: Text('Body content')),
+        ),
+      ),
+    );
+
+    final paddings = tester.widgetList<Padding>(
+      find.ancestor(
+        of: find.text('Body content'),
+        matching: find.byType(Padding),
+      ),
+    );
+
+    expect(
+      paddings.map((padding) => padding.padding),
+      contains(const EdgeInsets.only(top: 32)),
+    );
+  });
+
+  testWidgets('curved body can exclude status bar spacing', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: MediaQuery(
+          data: const MediaQueryData(padding: EdgeInsets.only(top: 24)),
+          child: const Text(
+            'Body content',
+          ).withCurvedBody(overlap: 16, includeStatusBar: false),
+        ),
+      ),
+    );
+
+    final paddings = tester.widgetList<Padding>(
+      find.ancestor(
+        of: find.text('Body content'),
+        matching: find.byType(Padding),
+      ),
+    );
+
+    expect(
+      paddings.map((padding) => padding.padding),
+      contains(EdgeInsets.zero),
+    );
+  });
+
+  testWidgets('curved body removes child top media query padding by default', (
+    tester,
+  ) async {
+    EdgeInsets? childPadding;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: MediaQuery(
+          data: const MediaQueryData(padding: EdgeInsets.only(top: 24)),
+          child: CurvedBody(
+            overlap: 16,
+            child: Builder(
+              builder: (context) {
+                childPadding = MediaQuery.paddingOf(context);
+                return const Text('Body content');
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(childPadding?.top, 0);
+  });
+
+  testWidgets('curved body can preserve child top media query padding', (
+    tester,
+  ) async {
+    EdgeInsets? childPadding;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: MediaQuery(
+          data: const MediaQueryData(padding: EdgeInsets.only(top: 24)),
+          child: CurvedBody(
+            overlap: 16,
+            removeTopMediaQueryPadding: false,
+            child: Builder(
+              builder: (context) {
+                childPadding = MediaQuery.paddingOf(context);
+                return const Text('Body content');
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(childPadding?.top, 24);
+  });
+
+  testWidgets('curved body clamps negative top spacing to zero', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: MediaQuery(
+          data: MediaQueryData(),
+          child: CurvedBody(overlap: 80, child: Text('Body content')),
+        ),
+      ),
+    );
+
+    final paddings = tester
+        .widgetList<Padding>(
+          find.ancestor(
+            of: find.text('Body content'),
+            matching: find.byType(Padding),
+          ),
+        )
+        .map((padding) => padding.padding);
+
+    expect(paddings, contains(EdgeInsets.zero));
+  });
+
   testWidgets('default drawer button opens scaffold drawer', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(

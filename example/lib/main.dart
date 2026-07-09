@@ -81,10 +81,7 @@ class ExampleHomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: _HomeContent(),
-      ),
+      body: _HomeContent().withCurvedBody(),
     );
   }
 
@@ -125,9 +122,25 @@ class _HomeContent extends StatelessWidget {
 
     return ListView.separated(
       itemCount: destinations.length,
+      padding: EdgeInsets.all(16),
       separatorBuilder: (context, index) => const SizedBox(height: 8),
       itemBuilder: (context, index) {
         final destination = destinations[index];
+
+        if (index == destinations.length - 1) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 700),
+            child: ExampleTile(
+              title: destination.title,
+              subtitle: destination.subtitle,
+              onTap: () {
+                Navigator.of(
+                  context,
+                ).push(buildExamplePageRoute(destination.screen));
+              },
+            ),
+          );
+        }
 
         return ExampleTile(
           title: destination.title,

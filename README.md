@@ -36,7 +36,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  curved_app_bar: ^1.0.3
+  curved_app_bar: ^1.0.4
 ```
 
 Import the package:
@@ -121,7 +121,8 @@ Scaffold(
 ### AppBar Overlay On Body
 
 Use `Scaffold.extendBodyBehindAppBar` when the body should render behind the
-curved app bar area.
+curved app bar area. Wrap the body with `CurvedBody` when you want layout-aware
+spacing that works cleanly with scroll views and complex body widgets.
 
 ```dart
 Scaffold(
@@ -130,9 +131,33 @@ Scaffold(
     title: Text('Home'),
     shape: CurvedAppBarShape.invertedRounded,
   ),
-  body: const Center(child: Text('Hello')),
+  body: CurvedBody(
+    child: ListView.separated(
+      itemCount: items.length,
+      separatorBuilder: (_, _) => const SizedBox(height: 8),
+      itemBuilder: (context, index) => Text(items[index]),
+    ),
+  ),
 );
 ```
+
+For compact code, use the `withCurvedBody` extension on any widget:
+
+```dart
+Scaffold(
+  extendBodyBehindAppBar: true,
+  appBar: const CurvedAppBar(
+    title: Text('Home'),
+    shape: CurvedAppBarShape.invertedRounded,
+  ),
+  body: Center(child: Text('Hello')).withCurvedBody(),
+);
+```
+
+`CurvedBody` uses real layout padding instead of visual translation. This keeps
+hit testing and scroll behavior predictable, and it removes inherited top
+`MediaQuery` padding from the child by default so `ListView`, `GridView`, and
+other scroll views do not add an extra safe-area gap.
 
 ### Custom Back and Drawer Buttons
 
@@ -323,6 +348,15 @@ CurvedAppBar(
 | `animationCurve` | `Curve` | `easeOutCubic` | Built-in animation curve. |
 | `clipBehavior` | `Clip` | `antiAlias` | Clip behavior used by the curved shape. |
 
+## CurvedBody Reference
+
+| Property | Type | Default | Use |
+| --- | --- | --- | --- |
+| `overlap` | `double` | `32` | Amount subtracted from the status bar top spacing so the body can rise into the curved area. |
+| `includeStatusBar` | `bool` | `true` | Uses `MediaQuery.paddingOf(context).top` when calculating top spacing. |
+| `removeTopMediaQueryPadding` | `bool` | `true` | Removes inherited top `MediaQuery` padding from the child to avoid double spacing in scroll views. |
+| `child` | `Widget` | required | Body content. |
+
 ## CurvedAppBarAction Reference
 
 | Property | Type | Default | Use |
@@ -360,6 +394,8 @@ flutter run -d android
 - `CurvedAppBar`
 - `CurvedAppBarAction`
 - `CurvedAppBarClipper`
+- `CurvedBody`
+- `CurvedBodyX.withCurvedBody`
 - `CurvedAppBarShape.rounded`
 - `CurvedAppBarShape.invertedRounded`
 

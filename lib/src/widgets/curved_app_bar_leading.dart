@@ -39,15 +39,9 @@ class CurvedAppBarLeading extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return SizedBox(
-      width: leadingWidth,
-      child: Align(
-        alignment: AlignmentDirectional.centerStart,
-        child: IconTheme.merge(
-          data: IconThemeData(color: foregroundColor),
-          child: leadingWidget,
-        ),
-      ),
+    return IconTheme.merge(
+      data: IconThemeData(color: foregroundColor),
+      child: leadingWidget,
     );
   }
 
