@@ -12,7 +12,7 @@ work directly with `Scaffold.appBar`.
 backgrounds, automatic status bar contrast, custom back and drawer buttons,
 typed overflow actions, and bottom widgets.
 
-## Features
+## ✨ Features
 
 - Drop-in `Scaffold.appBar` support
 - Solid color and `Gradient` backgrounds
@@ -24,19 +24,19 @@ typed overflow actions, and bottom widgets.
 - Optional built-in fade/slide entrance animation
 - No state management dependency
 
-## Supported Platforms
+## 📱 Supported Platforms
 
 | Android | iOS | Web | macOS | Windows | Linux |
 | --- | --- | --- | --- | --- | --- |
 | Supported | Supported | Supported | Supported | Supported | Supported |
 
-## Installation
+## 📦 Installation
 
 Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  curved_app_bar: ^1.0.7
+  curved_app_bar: ^1.0.8
 ```
 
 Import the package:
@@ -45,7 +45,7 @@ Import the package:
 import 'package:curved_app_bar/curved_app_bar.dart';
 ```
 
-## Quick Start
+## ⚡ Quick Start
 
 ```dart
 import 'package:curved_app_bar/curved_app_bar.dart';
@@ -66,9 +66,9 @@ class HomePage extends StatelessWidget {
 }
 ```
 
-## Implementation Guide
+## 🛠️ Implementation Guide
 
-### Solid Color App Bar
+### 🎨 Solid Color App Bar
 
 Use `backgroundColor` and `foregroundColor` when you want full control over the
 toolbar surface and icons.
@@ -84,7 +84,7 @@ CurvedAppBar(
 );
 ```
 
-### Gradient App Bar
+### 🌈 Gradient App Bar
 
 Use `backgroundGradient` for gradient surfaces. Status bar icon/text contrast is
 resolved from the gradient brightness automatically.
@@ -105,7 +105,7 @@ CurvedAppBar(
 );
 ```
 
-### Inverted Rounded Shape
+### 🔄 Inverted Rounded Shape
 
 Use `CurvedAppBarShape.invertedRounded` when the body background should rise
 into the app bar with top-left and top-right rounded corners.
@@ -124,7 +124,7 @@ Scaffold(
 );
 ```
 
-### AppBar Overlay On Body
+### 📲 AppBar Overlay On Body
 
 Use `Scaffold.extendBodyBehindAppBar` when the body should render behind the
 curved app bar area. Wrap the body with `CurvedBody` when you want layout-aware
@@ -168,7 +168,7 @@ hit testing and scroll behavior predictable, and it removes inherited top
 `MediaQuery` padding from the child by default so `ListView`, `GridView`, and
 other scroll views do not add an extra safe-area gap.
 
-### Custom Back and Drawer Buttons
+### 🔙 Custom Back and Drawer Buttons
 
 `automaticallyImplyLeading` follows familiar app bar behavior:
 
@@ -211,7 +211,7 @@ CurvedAppBar(
 );
 ```
 
-### Actions and Overflow Menu
+### ➕ Actions and Overflow Menu
 
 Use `actionItems` for professional action overflow. The first
 `maxVisibleActionItems` are shown as toolbar icons. Remaining actions are moved
@@ -257,7 +257,7 @@ CurvedAppBar(
 );
 ```
 
-### Overflow Menu Styling
+### 🖌️ Overflow Menu Styling
 
 Toolbar icon colors and popup menu item colors are resolved separately. This
 keeps menu items readable when the app bar uses white icons and the popup menu
@@ -293,7 +293,7 @@ CurvedAppBarAction(
 );
 ```
 
-### Bottom Content
+### 📑 Bottom Content
 
 Use a `PreferredSize` when adding tabs, filters, or other bottom content.
 
@@ -314,7 +314,7 @@ CurvedAppBar(
 );
 ```
 
-### Visibility and Animation
+### 🎬 Visibility and Animation
 
 `visible: false` collapses the preferred app bar height to zero. Set
 `animate: false` when the built-in fade/slide entrance animation is not needed.
@@ -327,7 +327,7 @@ CurvedAppBar(
 );
 ```
 
-## Property Reference
+## ⚙️ Property Reference
 
 | Property | Type | Default | Use |
 | --- | --- | --- | --- |
@@ -366,7 +366,7 @@ CurvedAppBar(
 | `animationCurve` | `Curve` | `easeOutCubic` | Built-in animation curve. |
 | `clipBehavior` | `Clip` | `antiAlias` | Clip behavior used by the curved shape. |
 
-## CurvedBody Reference
+## 📐 CurvedBody Reference
 
 | Property | Type | Default | Use |
 | --- | --- | --- | --- |
@@ -375,7 +375,7 @@ CurvedAppBar(
 | `removeTopMediaQueryPadding` | `bool` | `true` | Removes inherited top `MediaQuery` padding from the child to avoid double spacing in scroll views. |
 | `child` | `Widget` | required | Body content. |
 
-## CurvedAppBarAction Reference
+## 📝 CurvedAppBarAction Reference
 
 | Property | Type | Default | Use |
 | --- | --- | --- | --- |
@@ -387,7 +387,7 @@ CurvedAppBar(
 | `menuTextStyle` | `TextStyle?` | Resolved menu style | Per-item overflow menu text style. |
 | `enabled` | `bool` | `true` | Enables or disables the action. |
 
-## Run The Local Example
+## 💻 Run The Local Example
 
 This repository includes a multi-file example app for visual testing and
 integration reference.
@@ -407,7 +407,7 @@ flutter run -d ios
 flutter run -d android
 ```
 
-## Public API
+## 🔑 Public API
 
 - `CurvedAppBar`
 - `CurvedAppBarAction`
@@ -417,7 +417,7 @@ flutter run -d android
 - `CurvedAppBarShape.rounded`
 - `CurvedAppBarShape.invertedRounded`
 
-## Developer
+## 👨‍💻 Developer
 
 Developed and maintained by **Md Labibur Rahman**, Flutter Developer from
 Bangladesh.
@@ -426,7 +426,7 @@ Bangladesh.
 - Package repository:
   [curved_app_bar](https://github.com/labib-ur-rahman/curved_app_bar)
 
-## Contributing
+## 🤝 Contributing
 
 This package is part of my open-source learning journey. Contributions,
 suggestions, bug reports, and documentation improvements are welcome.
@@ -441,6 +441,6 @@ cd example && flutter analyze && flutter test
 dart pub publish --dry-run
 ```
 
-## License
+## 📄 License
 
 This package is released under the [MIT License](LICENSE).

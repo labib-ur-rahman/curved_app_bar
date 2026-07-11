@@ -1,3 +1,7 @@
+## 1.0.8
+
+- Added clean, professional emojis to the `README.md` documentation headers for better readability and structure.
+
 ## 1.0.7
 
 - Updated the package screenshots metadata in `pubspec.yaml` with the 9 new detailed preview assets.
