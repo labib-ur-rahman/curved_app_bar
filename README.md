@@ -36,7 +36,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  curved_app_bar: ^1.0.6
+  curved_app_bar: ^1.0.7
 ```
 
 Import the package:

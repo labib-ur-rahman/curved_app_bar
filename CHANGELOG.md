@@ -1,3 +1,8 @@
+## 1.0.7
+
+- Updated the package screenshots metadata in `pubspec.yaml` with the 9 new detailed preview assets.
+- Removed deprecated preview screenshot references.
+
 ## 1.0.6
 
 - Added solid color and gradient app bar preview images for the implementation

@@ -1,6 +1,6 @@
 name: curved_app_bar
 description: A lightweight and customizable curved AppBar widget for Flutter applications.
-version: 1.0.6
+version: 1.0.7
 homepage: https://github.com/labib-ur-rahman/curved_app_bar
 repository: https://github.com/labib-ur-rahman/curved_app_bar
 issue_tracker: https://github.com/labib-ur-rahman/curved_app_bar/issues
@@ -34,10 +34,24 @@ topics:
 screenshots:
   - description: 'Shows a curved gradient app bar with drawer button and action menu.'
     path: screenshots/gradient-app-bar-with-tab.webp
+  - description: 'Showcase the Curved App Bar'
+    path: assets/preview/Curved-App-Bar-by-Labib.gif
   - description: 'Shows a solid color CurvedAppBar implementation.'
-    path: assets/preview/Solid-Color-App-Bar.png
+    path: assets/preview/1-Solid-Color-App-Bar.png
   - description: 'Shows a gradient CurvedAppBar implementation.'
-    path: assets/preview/Gradient-App-Bar.png
+    path: assets/preview/2-Gradient-App-Bar.png
+  - description: 'Shows an inverted rounded shape CurvedAppBar implementation.'
+    path: assets/preview/3-Inverted-Rounded-Shape.png
+  - description: 'Shows CurvedAppBar overlay on body with CurvedBody.'
+    path: assets/preview/4-AppBar-Overlay-On-Body.gif
+  - description: 'Shows custom back and drawer buttons on CurvedAppBar.'
+    path: assets/preview/5-Custom-Back-and-Drawer-Buttons.gif
+  - description: 'Shows actions and overflow menu on CurvedAppBar.'
+    path: assets/preview/6-Actions-and-Overflow-Menu.gif
+  - description: 'Shows overflow menu styling on CurvedAppBar.'
+    path: assets/preview/7-Overflow-Menu-Styling.gif
+  - description: 'Shows CurvedAppBar with bottom content like tabs.'
+    path: assets/preview/8-Bottom-Content.png
 
 flutter:
   assets:
