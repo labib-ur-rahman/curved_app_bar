@@ -73,13 +73,13 @@ class HomePage extends StatelessWidget {
 Use `backgroundColor` and `foregroundColor` when you want full control over the
 toolbar surface and icons.
 
-![Solid Color App Bar](https://raw.githubusercontent.com/labib-ur-rahman/curved_app_bar/main/assets/preview/Solid-Color-App-Bar.png)
+![Solid Color App Bar](https://raw.githubusercontent.com/labib-ur-rahman/curved_app_bar/main/assets/preview/1-Solid-Color-App-Bar.png)
 
 ```dart
 CurvedAppBar(
   title: const Text('Orders'),
   subtitle: const Text('Today'),
-  backgroundColor: const Color(0xFF23479A),
+  backgroundColor: const Color(0xFF4079FF),
   foregroundColor: Colors.white,
 );
 ```
@@ -89,7 +89,7 @@ CurvedAppBar(
 Use `backgroundGradient` for gradient surfaces. Status bar icon/text contrast is
 resolved from the gradient brightness automatically.
 
-![Gradient App Bar](https://raw.githubusercontent.com/labib-ur-rahman/curved_app_bar/main/assets/preview/Gradient-App-Bar.png)
+![Gradient App Bar](https://raw.githubusercontent.com/labib-ur-rahman/curved_app_bar/main/assets/preview/2-Gradient-App-Bar.png)
 
 ```dart
 CurvedAppBar(
@@ -110,6 +110,8 @@ CurvedAppBar(
 Use `CurvedAppBarShape.invertedRounded` when the body background should rise
 into the app bar with top-left and top-right rounded corners.
 
+![Inverted Rounded Shape](https://raw.githubusercontent.com/labib-ur-rahman/curved_app_bar/main/assets/preview/3-Inverted-Rounded-Shape.png)
+
 ```dart
 Scaffold(
   appBar: const CurvedAppBar(
@@ -127,6 +129,8 @@ Scaffold(
 Use `Scaffold.extendBodyBehindAppBar` when the body should render behind the
 curved app bar area. Wrap the body with `CurvedBody` when you want layout-aware
 spacing that works cleanly with scroll views and complex body widgets.
+
+![AppBar Overlay On Body](https://raw.githubusercontent.com/labib-ur-rahman/curved_app_bar/main/assets/preview/4-AppBar-Overlay-On-Body.gif)
 
 ```dart
 Scaffold(
@@ -174,6 +178,8 @@ other scroll views do not add an extra safe-area gap.
   button is shown.
 - If neither condition is true, no leading widget is shown.
 
+![Custom Back and Drawer Buttons](https://raw.githubusercontent.com/labib-ur-rahman/curved_app_bar/main/assets/preview/5-Custom-Back-and-Drawer-Buttons.gif)
+
 ```dart
 Scaffold(
   drawer: const Drawer(child: Text('Menu')),
@@ -211,9 +217,12 @@ Use `actionItems` for professional action overflow. The first
 `maxVisibleActionItems` are shown as toolbar icons. Remaining actions are moved
 into a Material three-dot menu.
 
+![Actions and Overflow Menu](https://raw.githubusercontent.com/labib-ur-rahman/curved_app_bar/main/assets/preview/6-Actions-and-Overflow-Menu.gif)
+
 ```dart
 CurvedAppBar(
-  title: const Text('Dashboard'),
+  title: const Text("Photo Vault"),
+  subtitle: const Text("Overflow Styling Showcase"),
   maxVisibleActionItems: 2,
   actionItems: [
     CurvedAppBarAction(
@@ -254,6 +263,8 @@ Toolbar icon colors and popup menu item colors are resolved separately. This
 keeps menu items readable when the app bar uses white icons and the popup menu
 uses a light background.
 
+![Overflow Menu Styling](https://raw.githubusercontent.com/labib-ur-rahman/curved_app_bar/main/assets/preview/7-Overflow-Menu-Styling.gif)
+
 ```dart
 CurvedAppBar(
   foregroundColor: Colors.white,
@@ -285,6 +296,8 @@ CurvedAppBarAction(
 ### Bottom Content
 
 Use a `PreferredSize` when adding tabs, filters, or other bottom content.
+
+![Bottom Content](https://raw.githubusercontent.com/labib-ur-rahman/curved_app_bar/main/assets/preview/8-Bottom-Content.png)
 
 ```dart
 CurvedAppBar(
